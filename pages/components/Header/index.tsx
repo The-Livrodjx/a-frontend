@@ -1,15 +1,24 @@
-import { Alert, AlertDescription, AlertIcon, Avatar, Box, Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, FormControl, Input, useColorMode, useDisclosure } from "@chakra-ui/react";
+import { Alert, AlertDescription, AlertIcon, Avatar, Box, Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, FormControl, IconButton, Input, Text, useColorMode, useDisclosure } from "@chakra-ui/react";
 import Image from "next/image";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { BsFillCloudSunFill, BsFillMoonFill, BsSearch, BsArrowBarLeft } from "react-icons/bs";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { UserContext } from "../../contexts/UserContext";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
+import Link from "next/link";
+import Router from "next/router";
 
 export default function Header() {
-  const { isAuthenticated, profileImage, login } = useContext(UserContext);
+  const {
+    isAuthenticated,
+    profileImage,
+    login,
+    logout,
+    username
+  } = useContext(UserContext);
+  const [hasError, setHasError] = useState(false);
   const { toggleColorMode, colorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const validationSchema = Yup.object().shape({
@@ -23,13 +32,17 @@ export default function Header() {
   const formOptions = { resolver: yupResolver(validationSchema) };
   const { register, handleSubmit, formState, reset } = useForm(formOptions);
   const { errors } = formState;
-  
-  function onSubmit(data: any) {
+
+  async function onSubmit(data: any) {
     const { email, password } = data;
-    login(email, password);
-    reset()
+    let response = new Promise((resolve) => resolve(login(email, password)));
+    response.then((result) => {
+      if (!result) setHasError(true); reset();
+    })
+    setHasError(false);
     return false;
-  }
+  };
+
   return (
     <>
 
@@ -48,25 +61,30 @@ export default function Header() {
           <DrawerCloseButton />
           {isAuthenticated ? (
             <>
-              <Box>
+              <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+              >
                 <Avatar
-                  name="Livrodjx"
+                  name={username}
                   src={profileImage}
                   w={120}
                   h={120}
                   my={3}
+
                 />
                 <Box
-                  mt='1'
+                  mt='5'
                   mb='8'
                   fontWeight='semibold'
                   as='h1'
                   fontSize={21}
                   lineHeight='tight'
-                  noOfLines={1}
+                  noOfLines={3}
                   textAlign="center"
                 >
-                  Livrodjx
+                  {username}
                 </Box>
                 <Box
                   display='flex'
@@ -79,12 +97,18 @@ export default function Header() {
                   <Button
                     bg="#fa5e78"
                     color="#ffffff"
+                    onClick={() => { onClose(); Router.push('/profile') }}
                   >Edit Profile</Button>
                 </Box>
               </Box>
               <Button
                 mb={5}
                 bg="transparent"
+                onClick={() => {
+                  logout(); 
+                  Router.push('/'); 
+                  onClose()
+                }}
               >
                 <BsArrowBarLeft />
                 <span style={{ marginLeft: 5 }}>Log out</span>
@@ -92,11 +116,16 @@ export default function Header() {
             </>
           ) : (
             <>
-              <DrawerHeader>Log in your account</DrawerHeader>
+              <DrawerHeader mt={20}>Log in your account</DrawerHeader>
 
-              <DrawerBody>
+              <DrawerBody
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="space-between"
+              >
                 <form onSubmit={handleSubmit(onSubmit)}>
-                  {Object.entries(errors).length > 0 && (
+                  {(Object.entries(errors).length > 0 || hasError) && (
                     <Alert status='error'>
                       <AlertIcon />
                       <AlertDescription>Invalid credentials</AlertDescription>
@@ -107,14 +136,18 @@ export default function Header() {
                     type="text"
                     placeholder='E-mail'
                     focusBorderColor="#fa5e78"
+                    defaultValue=""
                     {...register('email')}
+                    onChange={() => { }}
                   />
                   <Input
                     mb={8}
                     type="password"
                     placeholder='***'
                     focusBorderColor="#fa5e78"
+                    defaultValue=""
                     {...register('password')}
+                    onChange={() => { }}
                   />
                   <Box
                     display='flex'
@@ -129,6 +162,11 @@ export default function Header() {
                     </Button>
                   </Box>
                 </form>
+                <Text mb={10} onClick={() => onClose()}>
+                  <Link href="/signin">
+                    Create your account here
+                  </Link>
+                </Text>
               </DrawerBody>
             </>
           )}
@@ -151,6 +189,10 @@ export default function Header() {
           width="125px"
           height="125px"
           objectFit="contain"
+          style={{
+            cursor: "pointer"
+          }}
+          onClick={() => { Router.push('/') }}
         ></Image>
 
         <Box
@@ -159,12 +201,21 @@ export default function Header() {
         >
           <Input
             w={500}
-            m={2}
             focusBorderColor="#fa5e78"
             type='email'
+            borderRight="none"
+            borderRightRadius={0}
             value=""
+            onChange={() => { }}
           />
-          <BsSearch />
+
+          <IconButton
+            height={41}
+            aria-label='Search database'
+            borderLeftRadius={0}
+            icon={<BsSearch />}
+            ml="-1px"
+          />
         </Box>
 
         <Box

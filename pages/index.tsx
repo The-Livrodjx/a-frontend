@@ -35,7 +35,6 @@ export interface HomeProps {
 export default function Home({ medias, pagination }: HomeProps) {
   return (
     <>
-      <Header />
       <Flex
         w="100%"
         h="100vh"
@@ -52,6 +51,8 @@ export default function Home({ medias, pagination }: HomeProps) {
           {medias.map((media: IMedia) => (
             <Box
               maxW="300px"
+              minH="400px"
+              maxH="500px"
               borderWidth='1px'
               borderRadius='lg'
               overflow='hidden'
@@ -65,12 +66,12 @@ export default function Home({ medias, pagination }: HomeProps) {
               <HoverVideoPlayer
                 style={{ 
                   cursor: 'pointer',
-                  minHeight: "250px",
+                  minHeight: "280px",
                   maxHeight: "300px" 
                 }}
                 videoSrc={`http://localhost:6969/medias/${media.file_name}`}>
               </HoverVideoPlayer>
-              <Box p='6'>
+              <Box p='6' minH={100}>
                 <Box display='flex' alignItems='baseline' flexWrap="wrap">
                   {media.tags?.map(tag => (
                     <Badge
