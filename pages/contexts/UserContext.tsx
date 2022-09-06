@@ -1,3 +1,4 @@
+import  Router  from "next/router";
 import { createContext, useEffect, useState } from "react";
 import { api } from "../api/api";
 
@@ -7,7 +8,9 @@ interface UserProviderProps {
 
 interface UserInterface {
   isAuthenticated: boolean;
+  profileModalOpen: boolean;
   setAuthenticated: (value: boolean) => void;
+  handleProfileModal: (value: boolean) => void;
   profileImage: string;
   username: string;
   handleProfileImage: (value: string) => void;
@@ -28,14 +31,43 @@ export default function UserContextProvider({ children }: UserProviderProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [profileImage, setProfileImage] = useState("");
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState('')
   const [authToken, setAuthToken] = useState("");
+  const [ 
+    profileModalOpen, 
+    setProfileModalOpen 
+  ] = useState(false);
 
   const setAuthenticated = (value: boolean) => {
     setIsAuthenticated(value);
   };
 
   const handleProfileImage = (value: string) => {
-    setProfileImage(value);
+    const token = localStorage.getItem('token');
+    
+    const httpOptions = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+    api.post(`/users/changeAvatar`, {
+      email: email,
+      profile_image: value
+    }, httpOptions)
+    .then(() => {
+      setProfileImage(value);
+      setProfileModalOpen(false);
+    })
+    .catch(err => {
+      if(err.response.data && 
+        err.response.data.statusCode === 401) 
+          setProfileModalOpen(false); logout();
+      Router.push('/')
+    })
+  };
+
+  const handleProfileModal = (value: boolean) => {
+    setProfileModalOpen(value);
   };
 
   const createUser = (body: CreateUser) => {
@@ -45,6 +77,7 @@ export default function UserContextProvider({ children }: UserProviderProps) {
           let data = response.data;
           setIsAuthenticated(true);
           setUsername(data.username);
+          setEmail(data.email)
           setAuthToken(data.token);
           localStorage.setItem('token', data.token);
           delete data.token;
@@ -65,10 +98,10 @@ export default function UserContextProvider({ children }: UserProviderProps) {
         email,
         password: pwd
       }).then((response) => {
-        console.log(response.data)
         let data = response.data;
         setIsAuthenticated(true);
         setProfileImage(data.profile_image);
+        setEmail(data.email);
         setUsername(data.username);
         setAuthToken(data.token);
         localStorage.setItem('token', data.token);
@@ -86,6 +119,7 @@ export default function UserContextProvider({ children }: UserProviderProps) {
     setIsAuthenticated(false);
     setProfileImage("");
     setAuthToken("");
+    setEmail("");
     localStorage.removeItem('token');
     localStorage.removeItem('user');
   };
@@ -105,6 +139,7 @@ export default function UserContextProvider({ children }: UserProviderProps) {
         if (user) {
           setProfileImage(user.profile_image);
           setUsername(user.username);
+          setEmail(user.email);
         };
         setIsAuthenticated(response.data);
       });
@@ -114,13 +149,15 @@ export default function UserContextProvider({ children }: UserProviderProps) {
     <UserContext.Provider
       value={{
         isAuthenticated,
+        profileModalOpen,
         setAuthenticated,
         profileImage,
         username,
         handleProfileImage,
         login,
         logout,
-        createUser
+        createUser,
+        handleProfileModal
       }}>
       {children}
     </UserContext.Provider >

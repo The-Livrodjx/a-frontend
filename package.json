@@ -18,6 +18,7 @@
     "react-hook-form": "^7.34.2",
     "react-hover-video-player": "^9.7.0",
     "react-icons": "^4.4.0",
+    "react-images-uploading": "^3.1.7",
     "yup": "^0.32.11"
   },
   "devDependencies": {

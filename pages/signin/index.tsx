@@ -26,15 +26,13 @@ export default function Sigin() {
   const { errors }: any = formState;
 
   const onSubmit = (data: any) => {
-    console.log(data);
+  
     let response = new Promise(resolve => resolve(createUser(data)))
     response.then((result: any) => {
-
       if (result.error) {
         setHasError(true);
-        console.log(result.error)
         setError(result.error);
-        // reset();
+        reset();
       };
     })
     setHasError(false);

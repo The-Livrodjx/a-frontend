@@ -35,6 +35,7 @@ export default function Header() {
 
   async function onSubmit(data: any) {
     const { email, password } = data;
+    console.log(errors)
     let response = new Promise((resolve) => resolve(login(email, password)));
     response.then((result) => {
       if (!result) setHasError(true); reset();
@@ -124,7 +125,10 @@ export default function Header() {
                 alignItems="center"
                 justifyContent="space-between"
               >
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form 
+                  onSubmit={handleSubmit(onSubmit)}
+                  onKeyDown={ event => { if (event.key == "Enter") console.log("aaa"); handleSubmit(onSubmit) } }
+                >
                   {(Object.entries(errors).length > 0 || hasError) && (
                     <Alert status='error'>
                       <AlertIcon />
@@ -148,6 +152,7 @@ export default function Header() {
                     defaultValue=""
                     {...register('password')}
                     onChange={() => { }}
+                    
                   />
                   <Box
                     display='flex'
@@ -211,7 +216,7 @@ export default function Header() {
 
           <IconButton
             height={41}
-            aria-label='Search database'
+            aria-label='Search media'
             borderLeftRadius={0}
             icon={<BsSearch />}
             ml="-1px"

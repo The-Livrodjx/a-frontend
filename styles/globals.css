@@ -15,6 +15,16 @@ a {
   box-sizing: border-box;
 }
 
+body {
+  overflow-x: hidden !important;
+}
+
+.icon-livro svg{
+  color: #fff !important;
+  background-color: #fff !important;
+  fill: #fff !important;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
