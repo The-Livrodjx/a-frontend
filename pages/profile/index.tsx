@@ -1,9 +1,8 @@
 import { Avatar, Box, Button, Flex, Text } from "@chakra-ui/react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
 import Router from "next/router";
 import { BsPlusSquareDotted } from "react-icons/bs"
-import ImageUploading from 'react-images-uploading';
 import ProfileModal from "../components/ProfileModal";
 
 export default function Profile() {
@@ -20,19 +19,16 @@ export default function Profile() {
     if (!isAuthenticated) {
       Router.push('/')
     }
-  }, [])
+  }, [isAuthenticated]);
+
   return (
     <>
       {profileModalOpen && <ProfileModal />}
       <Flex
         w="100vw"
-        overflowX="hidden"
         h="auto"
         align="center"
         justify="center"
-        style={{
-          overflowX: "hidden"
-        }}
       >
         <Flex
           mt={3}
