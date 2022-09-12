@@ -1,6 +1,8 @@
 import  Router  from "next/router";
 import { createContext, useEffect, useState } from "react";
+import { FieldValues } from "react-hook-form";
 import { api } from "../api/api";
+import { ErrorType } from "../signin";
 
 interface UserProviderProps {
   children: React.ReactNode
@@ -13,17 +15,15 @@ interface UserInterface {
   handleProfileModal: (value: boolean) => void;
   profileImage: string;
   username: string;
+  email: string;
   handleProfileImage: (value: string) => void;
   login: (email: string, pwd: string) => void;
-  createUser: (body: CreateUser) => void;
+  createUser: (
+    name: string, 
+    email: string, 
+    password: string) => Promise<void | ErrorType>;
   logout: () => void;
 };
-
-interface CreateUser {
-  name: string;
-  email: string;
-  password: string;
-}
 
 export const UserContext = createContext({} as UserInterface);
 
@@ -70,9 +70,17 @@ export default function UserContextProvider({ children }: UserProviderProps) {
     setProfileModalOpen(value);
   };
 
-  const createUser = (body: CreateUser) => {
+  const createUser = (
+    name: string, 
+    email: string, 
+    password: string
+  ): Promise<void | ErrorType> => {
     return new Promise((resolve) => {
-      api.post('/users/create', body)
+      api.post('/users/create', {
+        name,
+        email,
+        password
+      })
         .then(response => {
           let data = response.data;
           setIsAuthenticated(true);
@@ -156,6 +164,7 @@ export default function UserContextProvider({ children }: UserProviderProps) {
         handleProfileImage,
         login,
         logout,
+        email,
         createUser,
         handleProfileModal
       }}>

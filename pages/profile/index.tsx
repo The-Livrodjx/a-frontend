@@ -4,6 +4,7 @@ import { UserContext } from "../contexts/UserContext";
 import Router from "next/router";
 import { BsPlusSquareDotted } from "react-icons/bs"
 import ProfileModal from "../components/ProfileModal";
+import Link from "next/link";
 
 export default function Profile() {
   
@@ -157,7 +158,7 @@ export default function Profile() {
           ><BsPlusSquareDotted
               fontSize={20}
               style={{ marginRight: 10 }}
-            /><span>Add Video</span></Button>
+            /><Link href="/create">Add Video</Link></Button>
 
         </Flex>
 

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../pages/api/api";
 
-interface ITags {
+export interface ITags {
   id: number;
   name: string;
 };

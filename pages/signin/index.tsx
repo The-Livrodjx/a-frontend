@@ -1,10 +1,14 @@
 import Router from "next/router";
 import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { useForm } from 'react-hook-form';
+import { FieldValues, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { Alert, AlertDescription, AlertIcon, Box, Button, Flex, Input } from "@chakra-ui/react";
+
+export interface ErrorType {
+  error: string
+}
 
 export default function Sigin() {
   const { isAuthenticated, createUser } = useContext(UserContext);
@@ -25,16 +29,18 @@ export default function Sigin() {
   const { register, handleSubmit, formState, reset } = useForm(formOptions);
   const { errors }: any = formState;
 
-  const onSubmit = (data: any) => {
-  
-    let response = new Promise(resolve => resolve(createUser(data)))
-    response.then((result: any) => {
+  const onSubmit = (data: FieldValues) => {
+    const { name, email, password } = data;
+    let response = new Promise(resolve => resolve(
+      createUser(name, email, password)
+    ));
+    response.then((result: {error: string} | any) => {
       if (result.error) {
         setHasError(true);
         setError(result.error);
         reset();
       };
-    })
+    });
     setHasError(false);
     return false;
   }
@@ -73,7 +79,7 @@ export default function Sigin() {
         >
           {(Object.entries(errors).length > 0 || hasError) && (
             <>
-              {Object.entries(errors).map((error: any, index: number) => (
+              {Object.entries(errors).map((error: [string, any], index: number) => (
                 <>
                   <Alert status='error' key={index}>
                     <AlertIcon />

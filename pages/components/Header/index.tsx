@@ -4,12 +4,16 @@ import { useContext, useState } from "react";
 import { BsFillCloudSunFill, BsFillMoonFill, BsSearch, BsArrowBarLeft } from "react-icons/bs";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { UserContext } from "../../contexts/UserContext";
-import { useForm } from 'react-hook-form';
+import { FieldValues, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import Link from "next/link";
 import Router from "next/router";
 
+interface DataInterface {
+  email: string;
+  password: string
+}
 export default function Header() {
   const {
     isAuthenticated,
@@ -33,7 +37,7 @@ export default function Header() {
   const { register, handleSubmit, formState, reset } = useForm(formOptions);
   const { errors } = formState;
 
-  async function onSubmit(data: any) {
+  async function onSubmit(data: FieldValues) {
     const { email, password } = data;
     console.log(errors)
     let response = new Promise((resolve) => resolve(login(email, password)));
