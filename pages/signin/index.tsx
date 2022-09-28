@@ -99,7 +99,7 @@ export default function Sigin() {
           <Input
             my={8}
             type="text"
-            w={400}
+            w={{base: "200px", md: "300px", lg: "400px"}}
             placeholder='Username'
             focusBorderColor="#fa5e78"
             defaultValue=""
@@ -108,7 +108,7 @@ export default function Sigin() {
           />
           <Input
             mb={8}
-            w={400}
+            w={{base: "200px", md: "300px", lg: "400px"}}
             type="email"
             placeholder='E-mail'
             focusBorderColor="#fa5e78"
@@ -119,7 +119,7 @@ export default function Sigin() {
           <Input
             mb={8}
             type="password"
-            w={400}
+            w={{base: "200px", md: "300px", lg: "400px"}}
             placeholder='Password'
             focusBorderColor="#fa5e78"
             defaultValue=""

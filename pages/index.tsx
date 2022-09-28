@@ -6,8 +6,9 @@ import HoverVideoPlayer from 'react-hover-video-player';
 import { api } from './api/api';
 import Pagination from './components/Pagination';
 import { useMedias } from '../services/hooks/useMedias';
+import Link from 'next/link';
 
-interface ITags {
+export interface ITags {
   id: number;
   name: string;
 };
@@ -34,9 +35,7 @@ export default function Home({ medias, totalCount }: HomeProps) {
     isLoading,
     error
   } = useMedias(page);
-
-  console.log(data)
-  console.log('aasda', isLoading)
+  
   return (
     <>
       {isLoading ? (
@@ -130,7 +129,9 @@ export default function Home({ medias, totalCount }: HomeProps) {
                       <Button
                         bg="#fa5e78"
                         color="#ffffff"
-                      >Watch Video</Button>
+                      >
+                        <Link href={`/watch/${media.id}`}>Watch Video</Link>
+                      </Button>
                     </Box>
                   </Box>
                 ))}

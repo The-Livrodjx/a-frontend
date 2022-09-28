@@ -205,7 +205,7 @@ export default function Header() {
         ></Image>
 
         <Box
-          display="inline-flex"
+          display={{base: "none", md: "inline-flex"}}
           alignItems="center"
         >
           <Input

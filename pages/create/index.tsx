@@ -15,7 +15,6 @@ import { api } from "../api/api";
 import { FileContext } from "../contexts/FileContext";
 import { ITags } from "../../services/hooks/useMedias";
 import { UserContext } from "../contexts/UserContext";
-import Router from "next/router";
 
 export default function Create() {
   const validationSchema = Yup.object().shape({
@@ -142,7 +141,7 @@ export default function Create() {
           <Input
             my={8}
             type="text"
-            w={400}
+            w={{base: "200px", md: "300px", lg: "400px"}}
             placeholder='Title'
             focusBorderColor="#fa5e78"
             defaultValue=""

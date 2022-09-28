@@ -33,7 +33,6 @@ export default function PaginationItem({
       size="sm"
       fontSize="xs"
       w="4"
-      bg="gray.700"
       _hover={{
         bg: 'gray.500'
       }}

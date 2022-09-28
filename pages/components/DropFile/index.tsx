@@ -13,7 +13,7 @@ export default function DropFile() {
   const onDrop = useCallback((file: Object | any) => {
     if (!file.length) return false;
     const src = URL.createObjectURL(new Blob([file[0]], { type: 'video/mp4' }));
-    setVideoSrc(src)
+    setVideoSrc(src);
     setHasPreview(true);
     handleFile(file);
   }, []);
